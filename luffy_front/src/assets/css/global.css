@@ -1,0 +1,19 @@
+body, h1, h2, h3, h4, h5, h6, p, table, tr, td, ul, li, a, form, input, select, option, textarea {
+    margin: 0;
+    padding: 0;
+    /* claude: 全局基础字号调大到 18px */
+    font-size: 18px;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+ul {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse; /* 合并边框 */
+}

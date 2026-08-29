@@ -1,0 +1,112 @@
+ERROR 2026-08-17 22:02:41,003 log 283 Internal Server Error: /api/vi/home/logger/
+Traceback (most recent call last):
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\decorators\csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 528, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 428, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `Response`, `HttpResponse` or `StreamingHttpResponse` to be returned from the view, but received a `<class 'type'>`
+ERROR 2026-08-17 22:02:41,007 log 283 "GET /api/vi/home/logger/ HTTP/1.1" 500 83648
+ERROR 2026-08-17 22:03:03,040 log 283 Internal Server Error: /api/vi/home/logger/
+Traceback (most recent call last):
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\decorators\csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 528, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 428, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `Response`, `HttpResponse` or `StreamingHttpResponse` to be returned from the view, but received a `<class 'type'>`
+ERROR 2026-08-17 22:03:03,042 log 283 "GET /api/vi/home/logger/ HTTP/1.1" 500 83648
+ERROR 2026-08-17 22:03:05,553 log 283 Internal Server Error: /api/vi/home/logger/
+Traceback (most recent call last):
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\decorators\csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 528, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 428, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `Response`, `HttpResponse` or `StreamingHttpResponse` to be returned from the view, but received a `<class 'type'>`
+ERROR 2026-08-17 22:03:05,555 log 283 "GET /api/vi/home/logger/ HTTP/1.1" 500 83648
+ERROR 2026-08-17 22:03:14,085 log 283 Internal Server Error: /api/vi/home/logger/
+Traceback (most recent call last):
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\decorators\csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 528, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 428, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `Response`, `HttpResponse` or `StreamingHttpResponse` to be returned from the view, but received a `<class 'type'>`
+ERROR 2026-08-17 22:03:14,086 log 283 "GET /api/vi/home/logger/ HTTP/1.1" 500 83648
+ERROR 2026-08-17 22:07:38,019 log 283 Internal Server Error: /api/vi/home/logger/
+Traceback (most recent call last):
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\decorators\csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 528, in dispatch
+    self.response = self.finalize_response(request, response, *args, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Virtualenvs\luffy\Lib\site-packages\rest_framework\views.py", line 428, in finalize_response
+    assert isinstance(response, HttpResponseBase), (
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Expected a `Response`, `HttpResponse` or `StreamingHttpResponse` to be returned from the view, but received a `<class 'type'>`
+ERROR 2026-08-17 22:07:38,026 log 283 "GET /api/vi/home/logger/ HTTP/1.1" 500 83856
+ERROR 2026-08-19 22:03:11,661 common_exception_handler 17 用户【匿名用户】，访问地址【/api/vi/home/exc/】，请求方式是【GET】，访问视图类【<home.views.ExceptionView object at 0x00000179DF81BCE0>】，错误是【】
+ERROR 2026-08-19 22:07:19,994 common_exception_handler 24 用户【匿名用户】，访问地址【/api/vi/home/logger/】，请求方式是【GET】，访问视图类【<home.views.LoggerView object at 0x000002C6A67EB290>】，错误是【】

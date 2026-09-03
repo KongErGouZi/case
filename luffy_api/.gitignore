@@ -1,0 +1,9 @@
+.idea
+*.log
+*.pyc
+__pycache__
+**/migrations/*.py
+!**/migrations/__init__.py
+.venv
+scripts
+db.sqlite3

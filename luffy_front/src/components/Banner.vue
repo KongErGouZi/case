@@ -1,7 +1,7 @@
 <template>
   <div class="banner">
     <el-carousel height="400px" :interval="5000" arrow="always">
-      <el-carousel-item v-for="item in banner_list" :key="item">
+      <el-carousel-item v-for="item in bannerList" :key="item">
         <img :src="item.image" alt="">
       </el-carousel-item>
 
@@ -10,15 +10,25 @@
 </template>
 
 <script setup>
-import axios from '../http'
 import {ref, reactive} from 'vue'
+import {requestBanner} from "../api/home.js"
 
-const banner_list = reactive({})
+const bannerList = reactive({})
 
-axios.get('home/banner').then(res => {
-  Object.assign(banner_list, res.result)
-  console.log(banner_list)
-})
+// 方法一
+// axios.get('home/banner').then(res => {
+//   Object.assign(banner_list, res.result)
+//   console.log(banner_list)
+// })
+
+// 方法二 请求轮播图
+async function getBanner() {
+  let res = await requestBanner()
+  Object.assign(bannerList, res.result)
+}
+
+getBanner()
+
 
 </script>
 

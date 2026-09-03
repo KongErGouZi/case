@@ -249,3 +249,5 @@ SIMPLEUI_CONFIG = {
         # },
     ]
 }
+
+from .common_settings import *

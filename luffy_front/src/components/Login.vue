@@ -8,10 +8,8 @@
       </i>
       <div class="content">
         <div class="nav">
-                    <span :class="{active: login_method === 'is_pwd'}"
-                          @click="change_login_method('is_pwd')">密码登录</span>
-          <span :class="{active: login_method === 'is_sms'}"
-                @click="change_login_method('is_sms')">短信登录</span>
+          <span :class="{active: login_method === 'is_pwd'}" @click="change_login_method('is_pwd')">密码登录</span>
+          <span :class="{active: login_method === 'is_sms'}" @click="change_login_method('is_sms')">短信登录</span>
         </div>
         <el-form v-if="login_method === 'is_pwd'">
           <el-input
@@ -28,7 +26,7 @@
               show-password>
 
           </el-input>
-          <el-button type="primary">登录</el-button>
+          <el-button type="primary" @click="mulLogin">登录</el-button>
         </el-form>
         <el-form v-if="login_method === 'is_sms'">
           <el-input
@@ -43,11 +41,11 @@
               :prefix-icon="ChatLineRound"
               v-model="sms"
               clearable>
-            <template slot="append">
+            <template #append>
               <span class="sms" @click="send_sms">{{ sms_interval }}</span>
             </template>
           </el-input>
-          <el-button type="primary">登录</el-button>
+          <el-button type="primary" @click="sms_login">登录</el-button>
         </el-form>
         <div class="foot">
           <span @click="go_register">立即注册</span>
@@ -62,8 +60,12 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 //小图标引入
 import {User, Lock, Iphone, ChatLineRound} from '@element-plus/icons-vue'
+import {requestLogin, reqCheckMobile, reqSendSms, reqSmsLogin} from "../api/user.js"
+import {definedUser} from "../store/user.js";
+
 
 let $emit = defineEmits(['close', 'go'])
+let $storeUser = definedUser()
 
 const close_login = () => {
   // 通知父组件 close，父组件监听 close 事件，然后执行绑定 close 事件的函数
@@ -72,6 +74,109 @@ const close_login = () => {
 
 const go_register = () => {
   $emit('go')
+}
+
+// 多方式登陆
+const username = ref('')
+const password = ref('')
+
+async function mulLogin() {
+  if (username.value && password.value) {
+    let res = await requestLogin(username.value, password.value)
+    // $cookie.set('token', res.token, '7d')
+    // $cookie.set('username', res.username, '7d')
+    // $cookie.set('icon', res.icon, '7d')
+    $storeUser.set_user({
+      username: res.username,
+      token: res.token,
+      icon: res.icon
+    })
+
+    $emit('close')
+  } else {
+    ElMessage(
+        {
+          type: 'error',
+          message: '用户名或密码不能为空'
+        }
+    )
+  }
+}
+
+// 手机号校验
+const mobile = ref('')
+const is_send = ref(false)
+
+const check_mobile = async () => {
+  if (!mobile.value) return;
+  if (!mobile.value.match(/^1[3-9][0-9]{9}$/)) {
+    ElMessage({
+      type: 'error',
+      message: '手机号有误',
+      duration: 1000,
+      onClose: () => {
+        mobile.value = ''
+      }
+    })
+    return false;
+  }
+  let res = await reqCheckMobile(mobile.value)
+  if (res.is_exist) {
+    is_send.value = true
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '手机号未注册',
+      duration: 1000,
+      onClose: () => {
+        mobile.value = ''
+        go_register()
+      }
+    })
+  }
+}
+
+// 短信发送
+const sms_interval = ref('')
+const send_sms = async () => {
+  if (!is_send.value) return;
+  is_send.value = false
+  let sms_interval_time = 60
+  sms_interval.value = '发送中...'
+  let timer = setInterval(() => {
+        if (sms_interval_time <= 1) {
+          clearInterval(timer)
+          sms_interval.value = '获取验证码'
+          is_send.value = true
+        } else {
+          sms_interval_time -= 1
+          sms_interval.value = `${sms_interval_time}秒后再发`
+        }
+      },
+      1000)
+  await reqSendSms(mobile.value)
+}
+
+// 短信登陆
+const sms = ref('')
+
+async function sms_login() {
+  if (mobile.value && sms.value) {
+    let res = await reqSmsLogin(mobile.value, sms.value)
+    $storeUser.set_user({
+      username: res.username,
+      token: res.token,
+      icon: res.icon
+    })
+    $emit('close')
+  } else {
+    ElMessage(
+        {
+          type: 'error',
+          message: '手机号或验证码不能为空'
+        }
+    )
+  }
 }
 
 

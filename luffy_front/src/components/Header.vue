@@ -6,7 +6,7 @@
     <div class="nav">
       <ul class="left-part">
         <li class="logo">
-          <img src="../assets/vite.svg" alt="" @click="goPage('/')">
+          <img src="../assets/img/head-logo.svg" alt="" @click="goPage('/')">
 
         </li>
         <li class="ele">
@@ -21,7 +21,12 @@
       </ul>
 
       <div class="right-part">
-        <div>
+        <div v-if="$storeUser.login_user.username">
+          <span>{{ $storeUser.login_user.username }}</span>
+          <span class="line">|</span>
+          <span @click="logout">退出</span>
+        </div>
+        <div v-else>
           <span @click="put_login">登录</span>
           <span class="line">|</span>
           <span @click="put_register">注册</span>
@@ -30,9 +35,6 @@
 
 
     </div>
-  </div>
-
-  <div>
     <Login v-if="is_login" @close="close_login" @go="put_register"/>
     <Register v-if="is_register" @close="close_register" @go="put_login"/>
   </div>
@@ -40,14 +42,18 @@
 
 <script setup lang="js">
 import {useRoute, useRouter} from "vue-router";
+import Login from "./Login.vue";
+import Register from "./Register.vue";
+import {ref} from "vue";
+import {definedUser} from "../store/user.js";
 
 
 // 当前路由信息对象，只读，拿参数、路径、query
 let $route = useRoute()
 // 路由实例，做跳转、编程式导航
 let $router = useRouter()
-
 let url_path = sessionStorage.url_path || '/'
+let $storeUser = definedUser()
 
 const goPage = (path) => {
   if (url_path !== path) {
@@ -57,10 +63,6 @@ const goPage = (path) => {
 }
 
 // 登录注册模态框
-import Login from "./Login.vue";
-import Register from "./Register.vue";
-import {ref} from "vue";
-
 const is_login = ref(false)
 const is_register = ref(false)
 
@@ -83,6 +85,12 @@ const put_login = () => {
 }
 
 
+// 退出登陆
+const logout = () => {
+  $storeUser.log_out()
+  username.value = ''
+  icon.value = ''
+}
 </script>
 
 <style scoped>

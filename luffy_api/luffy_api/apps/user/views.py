@@ -4,7 +4,7 @@ from luffy_api.utils.common_response import APIResponse
 from rest_framework.exceptions import APIException
 from luffy_api.utils.common_logger import logger
 from rest_framework.decorators import action
-from .serializer import MulLoginSerializer
+from .serializer import MulLoginSerializer, SMSLoginSerializer
 from luffy_api.libs.tx_sms import generate_code, send_sms_core
 from django.core.cache import cache
 
@@ -23,9 +23,9 @@ class UserMobileView(ViewSet):
             is_exist = User.objects.filter(mobile=mobile).exists()
             if not is_exist:
                 logger.info(f'手机号校验失败：{mobile}')
-                return APIResponse(code=101, msg='手机号不存在')
+                return APIResponse(msg='手机号不存在', is_exist=False)
             logger.info(f'手机号校验成功：{mobile}')
-            return APIResponse(msg='手机号存在')
+            return APIResponse(msg='手机号存在', is_exist=True)
         except Exception as e:
             logger.error(f'手机号校验接口异常：{e}', exc_info=True)
             raise APIException('校验异常')
@@ -34,8 +34,7 @@ class UserMobileView(ViewSet):
 class UserView(GenericViewSet):
     serializer_class = MulLoginSerializer
 
-    @action(methods=['POST'], detail=False)
-    def mul_login(self, request, *args, **kwargs) -> APIResponse:
+    def _login(self, request, *args, **kwargs) -> APIResponse:
         serializer = self.get_serializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
@@ -45,6 +44,16 @@ class UserView(GenericViewSet):
         icon = serializer.context.get('icon')
 
         return APIResponse(username=username, token=token, icon=icon)
+
+    @action(methods=['POST'], detail=False)
+    def mul_login(self, request, *args, **kwargs) -> APIResponse:
+        """ 多方式登陆接口 """
+        return self._login(request, *args, **kwargs)
+
+    @action(methods=['POST'], detail=False)
+    def sms_login(self, request, *args, **kwargs) -> APIResponse:
+        """ 短信登陆接口 """
+        return self._login(request, *args, **kwargs)
 
     @action(methods=['POST'], detail=False)
     def send_sms(self, request, *args, **kwargs) -> APIResponse:
@@ -61,3 +70,9 @@ class UserView(GenericViewSet):
 
         cache.set('SMS_CODE_%s' % mobile, code)
         return APIResponse(result=res, msg='短信发送成功')
+
+    def get_serializer_class(self):
+        if self.action == 'sms_login':
+            return SMSLoginSerializer
+        else:
+            return MulLoginSerializer

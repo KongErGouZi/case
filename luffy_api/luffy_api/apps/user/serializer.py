@@ -5,14 +5,10 @@ import re
 from .models import User
 from rest_framework.exceptions import APIException
 from typing import Dict, Any
+from django.core.cache import cache
 
 
-class MulLoginSerializer(serializers.Serializer):
-    # 自定义字段
-    username = serializers.CharField(max_length=12, min_length=2)
-    password = serializers.CharField(max_length=12, min_length=2)
-
-    # 自定义校验
+class LoginSerializer(serializers.Serializer):
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
         user = self._get_user(attrs)
         token = self._get_token(user)
@@ -20,6 +16,27 @@ class MulLoginSerializer(serializers.Serializer):
 
         return attrs
 
+    def _get_user(self, attrs: Dict[str, Any]) -> User:
+        raise NotImplementedError('子类必须实现 _get_user 方法')
+
+    def _get_token(self, user: User) -> str:
+        """ 根据User实例，签发token，返回token令牌 """
+        refresh = RefreshToken.for_user(user)
+        return str(refresh.access_token)
+
+    def _pre_data(self, user: User, token: str) -> None:
+        """ 将查询到的用户名、token、头像放入context中，实现序列化类和视图类之间通信 """
+        self.context['username'] = user.username
+        self.context['token'] = token
+        self.context['icon'] = settings.BACKEND_URL + '/media/' + str(user.icon)
+
+
+class MulLoginSerializer(LoginSerializer):
+    # 自定义字段
+    username = serializers.CharField(max_length=12, min_length=2)
+    password = serializers.CharField(max_length=12, min_length=2)
+
+    # 自定义校验
     def _get_user(self, attrs: Dict[str, Any]) -> User:
         """ 获取User实例 """
         username = attrs.get('username')
@@ -36,13 +53,21 @@ class MulLoginSerializer(serializers.Serializer):
             return user
         raise APIException(code=101, detail='用户名或密码错误')
 
-    def _get_token(self, user: User) -> str:
-        """ 根据User实例，签发token，返回token令牌 """
-        refresh = RefreshToken.for_user(user)
-        return str(refresh.access_token)
 
-    def _pre_data(self, user: User, token: str) -> None:
-        """ 将查询到的用户名、token、头像放入context中，实现序列化类和视图类之间通信 """
-        self.context['username'] = user.username
-        self.context['token'] = token
-        self.context['icon'] = settings.BACKEND_URL + '/media/' + str(user.icon)
+class SMSLoginSerializer(LoginSerializer):
+    mobile = serializers.CharField(max_length=12, min_length=2)
+    code = serializers.CharField(max_length=12, min_length=2)
+
+    def _get_user(self, request, *args, **kwargs) -> User:
+        mobile = request.data.get('mobile')
+        code = request.data.get('code')
+
+        check_code = cache.get('SMS_CODE_%s' % mobile)
+
+        if code == check_code and (settings.DEBUG and code == '8888'):
+            if user := User.objects.filter(mobile=mobile).first():
+                return user
+            else:
+                raise APIException(detail='该手机号未注册')
+        else:
+            raise APIException(detail='验证码错误')

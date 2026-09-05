@@ -16,7 +16,7 @@
               :prefix-icon="Iphone"
               v-model="mobile"
               clearable
-              @blur="check_mobile">
+              @blur="checkMobile">
           </el-input>
           <el-input
               placeholder="密码"
@@ -31,10 +31,10 @@
               v-model="sms"
               clearable>
             <template #append>
-              <span class="sms" @click="send_sms">{{ sms_interval }}</span>
+              <span class="sms" @click="sendSms">{{ smsInterval }}</span>
             </template>
           </el-input>
-          <el-button type="primary">注册</el-button>
+          <el-button type="primary" @click="goRegister">注册</el-button>
         </el-form>
         <div class="foot">
           <span @click="go_login">立即登录</span>
@@ -45,6 +45,11 @@
 </template>
 
 <script setup>
+import {User, Lock, Iphone, ChatLineRound} from '@element-plus/icons-vue'
+import {ref} from "vue"
+import {ElMessage} from "element-plus"
+import {reqCheckMobile, reqSendSms, reqRegister} from "../api/user.js"
+
 
 let $emit = defineEmits(['close', 'go'])
 
@@ -54,6 +59,76 @@ const close_register = () => {
 
 const go_login = () => {
   $emit('go')
+}
+
+// 手机号校验
+const mobile = ref('')
+const isSend = ref(false)
+const checkMobile = async () => {
+  if (!mobile.value) return;
+  if (!mobile.value.match(/^1[3-9][0-9]{9}$/)) {
+    ElMessage({
+      type: 'error',
+      message: '请输入正确的手机号',
+      onClose: () => {
+        mobile.value = ''
+      }
+    })
+    return false
+  }
+  let res = await reqCheckMobile(mobile.value)
+  if (!res.is_exist) {
+    isSend.value = true
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '手机号已经注册过了',
+      onClose: () => {
+        mobile.value = ''
+        go_login()
+      }
+    })
+  }
+}
+
+// 短信发送
+const smsInterval = ref('')
+const sms = ref('')
+const sendSms = async () => {
+  if (!isSend.value) return;
+  isSend.value = false
+  let smsIntervalTime = 60
+  smsInterval.value = '发送中...'
+  let timer = setInterval(() => {
+    if (smsIntervalTime <= 1) {
+      smsInterval.value = '获取验证码'
+      isSend.value = true
+    } else {
+      smsIntervalTime -= 1
+      smsInterval.value = `${smsIntervalTime}秒后重新获取`
+    }
+  }, 1000)
+  await reqSendSms(mobile.value)
+}
+
+// 注册
+const password = ref('')
+const goRegister = async () => {
+  if (mobile.value && password.value && sms.value) {
+    await reqRegister(mobile.value, sms.value, password.value)
+    ElMessage({
+      type: 'success',
+      message: '注册成功，去登陆吧！',
+      onClose: () => {
+        go_login()
+      }
+    })
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '手机号或验证码或密码不能为空'
+    })
+  }
 }
 
 </script>

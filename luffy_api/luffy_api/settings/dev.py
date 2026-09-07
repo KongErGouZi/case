@@ -251,3 +251,16 @@ SIMPLEUI_CONFIG = {
 }
 
 from .common_settings import *
+
+# 缓存设置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+            # "PASSWORD": "123",
+        }
+    }
+}

@@ -71,3 +71,26 @@ class SMSLoginSerializer(LoginSerializer):
                 raise APIException(detail='该手机号未注册')
         else:
             raise APIException(detail='验证码错误')
+
+
+class UserRegisterSerializer(serializers.ModelSerializer):
+    code: serializers.CharField = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ['mobile', 'code', 'password']
+
+    def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
+        code = attrs.pop('code')
+        mobile = attrs.get('mobile')
+
+        check_code = cache.get('SMS_CODE_%s' % mobile)
+        if code == check_code or (settings.DEBUG and code == '8888'):
+            attrs['username'] = mobile
+            return attrs
+        else:
+            raise APIException('验证码错误')
+
+    def create(self, validated_data: Dict[str, Any]) -> User:
+        user = User.objects.create_user(**validated_data)
+        return user

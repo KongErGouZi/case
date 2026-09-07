@@ -4,9 +4,10 @@ from luffy_api.utils.common_response import APIResponse
 from rest_framework.exceptions import APIException
 from luffy_api.utils.common_logger import logger
 from rest_framework.decorators import action
-from .serializer import MulLoginSerializer, SMSLoginSerializer
-from luffy_api.libs.tx_sms import generate_code, send_sms_core
+from .serializer import MulLoginSerializer, SMSLoginSerializer, UserRegisterSerializer
+from luffy_api.libs.tx_sms import generate_code
 from django.core.cache import cache
+from celery_task.user_task import send_sms_celery
 
 
 # 不需要序列化，所有用ViewSet
@@ -34,8 +35,16 @@ class UserMobileView(ViewSet):
 class UserView(GenericViewSet):
     serializer_class = MulLoginSerializer
 
+    def get_serializer_class(self):
+        if self.action == 'sms_login':
+            return SMSLoginSerializer
+        elif self.action == 'register':
+            return UserRegisterSerializer
+        else:
+            return super().get_serializer_class()
+
     def _login(self, request, *args, **kwargs) -> APIResponse:
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, context={'request': request})
 
         serializer.is_valid(raise_exception=True)
 
@@ -63,7 +72,8 @@ class UserView(GenericViewSet):
             raise APIException(detail='手机号不能为空')
 
         code = generate_code()
-        res = send_sms_core(mobile, code)
+        # res = send_sms_core(mobile, code)
+        res = send_sms_celery.delay(mobile, code)
 
         if not res:
             raise APIException('短信发送失败')
@@ -71,8 +81,9 @@ class UserView(GenericViewSet):
         cache.set('SMS_CODE_%s' % mobile, code)
         return APIResponse(result=res, msg='短信发送成功')
 
-    def get_serializer_class(self):
-        if self.action == 'sms_login':
-            return SMSLoginSerializer
-        else:
-            return MulLoginSerializer
+    @action(methods=['POST'], detail=False)
+    def register(self, request, *args, **kwargs) -> APIResponse:
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return APIResponse(msg='注册成功')

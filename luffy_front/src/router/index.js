@@ -1,16 +1,22 @@
 // 导入路由创建的相关方法
-import {createRouter,createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 
 // 导入vue组件
 import HomeView from '../views/HomeView.vue'
+import SeckillView from '../views/SeckillView.vue'
 
 // 创建路由对象,声明路由规则
 const router = createRouter({
     history: createWebHistory(),
-    routes:[
+    routes: [
         {
-            path:'/',
-            component:HomeView
+            path: '/',
+            component: HomeView
+        },
+        {
+            path: '/seckill',
+            name: 'seckill',
+            component: SeckillView
         },
     ]
 

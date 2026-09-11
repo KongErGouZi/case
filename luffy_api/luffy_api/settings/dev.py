@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'home',
-    'user'
+    'user',
+    'course',
 ]
 
 MIDDLEWARE = [
@@ -200,7 +201,8 @@ CORS_ALLOW_HEADERS = (
 
 SIMPLEUI_CONFIG = {
     'system_keep': False,
-    'menu_display': ['首页功能', '用户管理', '权限认证', '我们的测试'],  # 开启排序和过滤功能, 不填此字段为默认排序和全部显示, 空列表[] 为全部不显示.
+    'menu_display': ['首页功能', '用户管理', '权限认证', '课程管理', '我们的测试'],
+    # 开启排序和过滤功能, 不填此字段为默认排序和全部显示, 空列表[] 为全部不显示.
     'dynamic': True,  # 设置是否开启动态菜单, 默认为False. 如果开启, 则会在每次用户登陆时动态展示菜单内容
     'menus': [
         {
@@ -240,6 +242,38 @@ SIMPLEUI_CONFIG = {
                     'url': 'auth/group/'
                 },
             ]
+        },
+        {
+            'name': '课程管理',
+            'icon': 'fas fa-code',
+            'models': [
+                {
+                    'name': '课程分类',
+                    'icon': 'fa fa-user',
+                    'url': 'course/coursecategory/'
+                },
+                {
+                    'name': '课程',
+                    'icon': 'fa fa-user',
+                    'url': 'course/course/'
+                },
+                {
+                    'name': '教师',
+                    'icon': 'fa fa-user',
+                    'url': 'course/teacher/'
+                },
+                {
+                    'name': '章节',
+                    'icon': 'fa fa-user',
+                    'url': 'course/coursechapter/'
+                },
+                {
+                    'name': '课时',
+                    'icon': 'fa fa-user',
+                    'url': 'course/coursesection/'
+                },
+            ]
+
         },
         # {
         #

@@ -24,6 +24,7 @@ const bannerList = reactive({})
 // 方法二 请求轮播图
 async function getBanner() {
   let res = await requestBanner()
+  console.log(res)
   Object.assign(bannerList, res.result)
 }
 
